@@ -1,8 +1,8 @@
-package KAS
+package EducationalTrajectory
 
 import java.util.UUID
 
-trait KeyWord {
+trait TableTemplate {
   val id:UUID
   val value:String
 }

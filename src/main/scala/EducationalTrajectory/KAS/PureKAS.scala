@@ -1,4 +1,4 @@
-package KAS
+package EducationalTrajectory.KAS
 
 abstract class PureKAS[T]{
   val value:T

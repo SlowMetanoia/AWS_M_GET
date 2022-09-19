@@ -1,3 +1,5 @@
+package EducationalTrajectory
+
 import java.util.UUID
 
 package object KAS {
