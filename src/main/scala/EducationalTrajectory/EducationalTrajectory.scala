@@ -1,0 +1,5 @@
+package EducationalTrajectory
+
+trait EducationalTrajectory {
+  
+}
