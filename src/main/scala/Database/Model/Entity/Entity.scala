@@ -1,10 +1,13 @@
 package Database.Model.Entity
 
-import scalikejdbc.ParameterBinderFactory
-
 import java.util.UUID
 
-trait Entity {
-  implicit val uuidFactory: ParameterBinderFactory[UUID] = ParameterBinderFactory[UUID] {
-    value => (stmt, idx) => stmt.setObject(idx, value) }
+sealed trait Entity
+
+//TODO
+trait CQCElementEntityTrait extends Entity {
+  val id: UUID
+  val parentId: UUID
+  val elemType: String
+  val children: Seq[CQCElementEntityTrait]
 }
