@@ -1,7 +1,7 @@
 package Database
 
-import Database.Model.Entity.{CQCElementDictionaryEntity, CQCElementEntity, Entity}
-import Database.Table.{CQCElementDictionaryTable, CQCElementTable, Table}
+import Database.Model.Entity.{CQCElementDictionaryEntity, CQCElementEntity, CQCElementHierarchyEntity, Entity}
+import Database.Table.{CQCElementDictionaryTable, CQCElementHierarchyTable, CQCElementTable, Table}
 
 package object Mapper {
   sealed trait EntityMapper[EntityType <: Entity, TableType <: Table] {
@@ -12,5 +12,5 @@ package object Mapper {
 
   trait CQCElementEntityMapper extends EntityMapper[CQCElementEntity, CQCElementTable]
   trait CQCElementDictionaryEntityMapper extends EntityMapper[CQCElementDictionaryEntity, CQCElementDictionaryTable]
-
+  trait CQCElementHierarchyEntityMapper extends EntityMapper[CQCElementHierarchyEntity, CQCElementHierarchyTable]
 }

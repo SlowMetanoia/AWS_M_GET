@@ -5,7 +5,7 @@ import scalikejdbc._
 import java.util.UUID
 
 /**
- * Таблица cqc - элемнты ККХ
+ * Таблица cqc - элементы ККХ
  *
  * @param id       элемента ККХ
  * @param parentId id родителя данного элемента

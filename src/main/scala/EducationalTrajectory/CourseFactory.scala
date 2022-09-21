@@ -4,7 +4,7 @@ import AbstractHierarchy.HierarchyDescription
 
 import java.util.UUID
 
-class CourseFactory(courseStructureHierarchy: HierarchyDescription) {
+class CourseFactory(val courseStructureHierarchy: HierarchyDescription) {
   type hBox = courseStructureHierarchy.HierarchyBox.type
   case class ActualCourse(
                 parts: Map[ String, Set[ hBox ] ],

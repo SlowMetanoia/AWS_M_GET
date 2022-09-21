@@ -75,7 +75,6 @@ object CQCElementEntity extends CQCElementDAO {
           cqcC.value -> rows.value
         )
     }.update.apply()
-
   }
 
   /**

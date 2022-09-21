@@ -16,5 +16,8 @@ package object Table {
     val name: String
   }
 
-
+  trait CQCElementHierarchySignature extends Table {
+    val childType: String
+    val parentType: String
+  }
 }

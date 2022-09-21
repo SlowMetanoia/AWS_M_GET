@@ -74,3 +74,20 @@ trait CQCElementDAO extends DAO[CQCElementEntity, UUID] {
 }
 
 trait CQCElementDictionaryDAO extends DAO[CQCElementDictionaryEntity, String]
+
+trait CQCElementHierarchyDAO extends DAO[CQCElementHierarchyEntity, String] {
+  def findByParentType(parentType: String)
+                      (implicit session: DBSession): Option[CQCElementHierarchyEntity]
+
+  def findByChildType(childType: String)
+                     (implicit session: DBSession): Option[CQCElementHierarchyEntity]
+
+  def findByDoubleKey(doubleKey: (String, String))
+                     (implicit session: DBSession): Option[CQCElementHierarchyEntity]
+
+  def deleteByDoubleKey(doubleKey: (String, String))
+                       (implicit session: DBSession): Unit
+
+  def updateByDoubleKey(doubleKey: (String, String))
+                       (implicit session: DBSession): Unit
+}
