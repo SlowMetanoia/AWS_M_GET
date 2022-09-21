@@ -71,7 +71,7 @@ object CQCElementEntity extends CQCElementDAO {
         .namedValues(
           cqcC.id -> rows.id,
           cqcC.parentId -> rows.parentId,
-          cqcC.elementType -> rows.elemType,
+          cqcC.elemType -> rows.elemType,
           cqcC.value -> rows.value
         )
     }.update.apply()
@@ -93,7 +93,7 @@ object CQCElementEntity extends CQCElementDAO {
         .namedValues(
           cqcC.id -> sqls.?,
           cqcC.parentId -> sqls.?,
-          cqcC.elementType -> sqls.?,
+          cqcC.elemType -> sqls.?,
         )
     }.batch(batchParams: _*).apply()
   }

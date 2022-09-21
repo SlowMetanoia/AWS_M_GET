@@ -1,7 +1,7 @@
 package Database.Model.Entity
 
 import Database.Mapper.CQCElementDictionaryMapper
-import Database.Table.{CQCElementDictionaryTable, CQCElementTable}
+import Database.Table.CQCElementDictionaryTable
 import Database.Table.CQCElementDictionaryTable.{cqcDict, cqcDictC}
 import scalikejdbc._
 
@@ -44,7 +44,7 @@ object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
     val row: Option[CQCElementDictionaryTable] =
       withSQL {
         select.from(CQCElementDictionaryTable as cqcDict)
-          .where.eq(cqcDict.id, id)
+          .where.eq(cqcDict.name, id)
       }.map(CQCElementDictionaryTable(cqcDict.resultName)).single.apply()
 
     row.map(CQCElementDictionaryMapper.tableRow2Entity)
@@ -93,7 +93,7 @@ object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
                          (implicit session: DBSession): Unit =
     withSQL {
       deleteFrom(CQCElementDictionaryTable)
-        .where.eq(cqcDictC.id, id)
+        .where.eq(cqcDictC.name, id)
     }.update.apply()
 
 
