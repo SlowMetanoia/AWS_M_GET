@@ -44,9 +44,9 @@ sealed trait DAO[EntityType, IdType] {
             (implicit session: DBSession): Unit
 
   /**
-   * Вставка сразу нескольких KAS'ов в БД
+   * Вставка сразу нескольких Entity в БД
    *
-   * @param entityList список KAS'ов которые мы хотим вставить
+   * @param entityList список Entity которые мы хотим вставить
    */
   def insertMultiRows(entityList: Seq[EntityType])
                      (implicit session: DBSession): Unit
@@ -70,5 +70,7 @@ sealed trait DAO[EntityType, IdType] {
 }
 
 trait CQCElementDAO extends DAO[CQCElementEntity, UUID] {
-  def findChild(entity: CQCElementEntityTrait): Seq[CQCElementEntityTrait]
+  def findChild(entity: CQCElementEntitySignature): Seq[CQCElementEntitySignature]
 }
+
+trait CQCElementDictionaryDAO extends DAO[CQCElementDictionaryEntity, String]

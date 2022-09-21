@@ -4,10 +4,13 @@ import java.util.UUID
 
 sealed trait Entity
 
-//TODO
-trait CQCElementEntityTrait extends Entity {
+trait CQCElementEntitySignature extends Entity {
   val id: UUID
   val parentId: UUID
   val elemType: String
-  val children: Seq[CQCElementEntityTrait]
+  val value: String
+}
+
+trait CQCElementDictionaryEntitySignature extends Entity {
+  val name: String
 }

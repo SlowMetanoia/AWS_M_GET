@@ -13,7 +13,8 @@ import java.util.UUID
  */
 case class CQCElementTable(id: UUID,
                            parentId: UUID,
-                           elemType: String) extends Table
+                           elemType: String,
+                           value: String) extends CQCElementTableSignature
 
 object CQCElementTable extends SQLSyntaxSupport[CQCElementTable] {
   val cqc: QuerySQLSyntaxProvider[SQLSyntaxSupport[CQCElementTable], CQCElementTable] = CQCElementTable.syntax("cqc")
@@ -26,6 +27,7 @@ object CQCElementTable extends SQLSyntaxSupport[CQCElementTable] {
     new CQCElementTable(
       id = UUID.fromString(rs.get(r.id)),
       parentId = UUID.fromString(rs.get(r.parentId)),
-      elemType = rs.string(r.elemType)
+      elemType = rs.string(r.elemType),
+      value = rs.string(r.value)
     )
 }

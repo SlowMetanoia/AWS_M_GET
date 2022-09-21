@@ -10,11 +10,11 @@ import java.util.UUID
 case class CQCElementEntity(id: UUID,
                             parentId: UUID,
                             elemType: String,
-                            children: Seq[CQCElementEntity]) extends CQCElementEntityTrait
+                            value: String) extends CQCElementEntitySignature
 
 object CQCElementEntity extends CQCElementDAO {
 
-  override def findChild(entity: CQCElementEntityTrait): Seq[CQCElementEntityTrait] = ???
+  override def findChild(entity: CQCElementEntitySignature): Seq[CQCElementEntitySignature] = ???
 
   /**
    * Получение всех Элементов ККХ из таблицы
@@ -30,7 +30,7 @@ object CQCElementEntity extends CQCElementDAO {
                        orderBy: SQLSyntax,
                        sort: SQLSyntax)
                       (implicit session: DBSession): Seq[CQCElementEntity] = {
-    val cqcElemRows: Seq[CQCElementTable] =
+    val rows: Seq[CQCElementTable] =
       withSQL {
         select.all(cqc).from(CQCElementTable as cqc)
           .orderBy(orderBy)
@@ -38,7 +38,7 @@ object CQCElementEntity extends CQCElementDAO {
           .offset(offset)
       }.map(CQCElementTable(cqc.resultName)).collection.apply()
 
-    cqcElemRows.map(CQCElementMapper.tableRow2Entity)
+    rows.map(CQCElementMapper.tableRow2Entity)
   }
 
   /**
@@ -48,13 +48,13 @@ object CQCElementEntity extends CQCElementDAO {
    * @return Optional с Элементом ККХ
    */
   override def findById(id: UUID)(implicit session: DBSession): Option[CQCElementEntity] = {
-    val cqcElementRow: Option[CQCElementTable] =
+    val row: Option[CQCElementTable] =
       withSQL {
         select.from(CQCElementTable as cqc)
           .where.eq(cqc.id, id)
       }.map(CQCElementTable(cqc.resultName)).single.apply()
 
-    cqcElementRow.map(CQCElementMapper.tableRow2Entity)
+    row.map(CQCElementMapper.tableRow2Entity)
   }
 
 
@@ -64,24 +64,29 @@ object CQCElementEntity extends CQCElementDAO {
    * @param entity который необходимо вставить в таблицу
    */
   override def insert(entity: CQCElementEntity)
-                     (implicit session: DBSession): Unit =
+                     (implicit session: DBSession): Unit = {
+    val rows = CQCElementMapper.entity2TableRow(entity)
     withSQL {
       insertInto(CQCElementTable)
         .namedValues(
-          cqcC.id -> entity.id,
-          cqcC.parentId -> entity.parentId,
-          cqcC.elementType -> entity.elemType,
+          cqcC.id -> rows.id,
+          cqcC.parentId -> rows.parentId,
+          cqcC.elementType -> rows.elemType,
+          cqcC.value -> rows.value
         )
     }.update.apply()
 
+  }
+
   /**
-   * Вставка сразу нескольких KAS'ов в БД
+   * Вставка сразу нескольких Элементов ККХ в БД
    *
-   * @param entityList список KAS'ов которые мы хотим вставить
+   * @param entityList список Элементов ККХ которые мы хотим вставить
    */
   override def insertMultiRows(entityList: Seq[CQCElementEntity])
                               (implicit session: DBSession): Unit = {
-    val batchParams: Seq[Seq[Any]] = entityList.map(elem => Seq(elem.id, elem.parentId, elem.elemType))
+    val batchParams: Seq[Seq[Any]] = entityList.map(CQCElementMapper.entity2TableRow)
+      .map(elem => Seq(elem.id, elem.parentId, elem.elemType))
 
     withSQL {
       insertInto(CQCElementTable)
@@ -94,16 +99,31 @@ object CQCElementEntity extends CQCElementDAO {
   }
 
   /**
-   * Удаление Entity из таблицы по id
+   * Удаление Элемента ККХ из таблицы по id
    *
-   * @param id Entity которую необходимо удалить
+   * @param id Элемента ККХ который необходимо удалить
    */
-  override def deleteById(id: UUID)(implicit session: DBSession): Unit = ???
+  override def deleteById(id: UUID)
+                         (implicit session: DBSession): Unit =
+    withSQL {
+      deleteFrom(CQCElementTable)
+        .where.eq(cqcC.id, id)
+    }.update.apply()
 
   /**
-   * Обновление Entity в таблице
+   * Обновление Элемента ККХ в таблице
    *
-   * @param entity Entity которое будет обновлено
+   * @param entity Элемента ККХ который будет обновлен
    */
-  override def update(entity: CQCElementEntity)(implicit session: DBSession): Unit = ???
+  override def update(entity: CQCElementEntity)
+                     (implicit session: DBSession): Unit = {
+    val row = CQCElementMapper.entity2TableRow(entity)
+    withSQL {
+      QueryDSL.update(CQCElementTable)
+        .set(
+          cqcC.parentId -> row.parentId,
+          cqcC.elemType -> row.elemType
+        )
+    }.update.apply()
+  }
 }
