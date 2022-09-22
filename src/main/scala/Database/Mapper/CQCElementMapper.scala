@@ -1,6 +1,6 @@
 package Database.Mapper
 import Database.Model.Entity.CQCElementEntity
-import Database.Table.CQCElementTable
+import Database.Model.Table.CQCElementTable
 
 object CQCElementMapper extends CQCElementEntityMapper {
   override def tableRow2Entity(row: CQCElementTable): CQCElementEntity =

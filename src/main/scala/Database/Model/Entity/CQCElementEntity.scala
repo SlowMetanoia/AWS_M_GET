@@ -1,8 +1,10 @@
 package Database.Model.Entity
 
 import Database.Mapper.CQCElementMapper
-import Database.Table.CQCElementTable
-import Database.Table.CQCElementTable.{cqc, cqcC}
+import Database.Model.HierarchyEntityModel
+import Database.Model.Table.CQCElementTable
+import Database.Model.Table.CQCElementTable.{cqc, cqcC}
+import Database.Signature.EntityAndTable.CQCElementEntitySignature
 import scalikejdbc._
 
 import java.util.UUID
@@ -10,11 +12,39 @@ import java.util.UUID
 case class CQCElementEntity(id: UUID,
                             parentId: UUID,
                             elemType: String,
-                            value: String) extends CQCElementEntitySignature
+                            value: String) extends CQCElementEntitySignature with HierarchyEntityModel {
+  /**
+   * Получение родителя Элемента ККХ
+   *
+   * @return родителя
+   */
+  override def parent(implicit session: DBSession): Option[CQCElementEntity] = {
+    val row: Option[CQCElementTable] =
+      withSQL {
+      select.from(CQCElementTable as cqc)
+        .where.eq(cqc.parentId, parentId)
+    }.map(CQCElementTable(cqc.resultName)).single.apply()
+
+    row.map(CQCElementMapper.tableRow2Entity)
+  }
+
+  /**
+   * Получением потомков Элемента ККХ
+   *
+   * @return последовательноть потомков Элемента ККХ
+   */
+  override def children(implicit session: DBSession): Seq[CQCElementEntity] = {
+    val rows: Seq[CQCElementTable] =
+      withSQL {
+        select.all(cqc).from(CQCElementTable as cqc)
+          .where.eq(cqc.parentId, id)
+      }.map(CQCElementTable(cqc.resultName)).collection.apply()
+
+    rows.map(CQCElementMapper.tableRow2Entity)
+  }
+}
 
 object CQCElementEntity extends CQCElementDAO {
-
-  override def findChild(entity: CQCElementEntitySignature): Seq[CQCElementEntitySignature] = ???
 
   /**
    * Получение всех Элементов ККХ из таблицы
