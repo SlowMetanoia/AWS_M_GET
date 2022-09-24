@@ -1,15 +1,13 @@
 package Database.Model.Entity
 
+import Database.Model.Table.CourseTable
 import Database.{ASC, Id}
-import scalikejdbc.{DBSession, ParameterBinderFactory}
+import scalikejdbc.DBSession
 import scalikejdbc.interpolation.SQLSyntax
 
 import java.util.UUID
 
-sealed trait DAO[EntityType, IdType] {
-  implicit val uuidFactory: ParameterBinderFactory[UUID] = ParameterBinderFactory[UUID] {
-    value => (stmt, idx) => stmt.setObject(idx, value)
-  }
+sealed trait DAO[EntityType] extends UUIDFactory {
 
   /**
    * Получение всех Entity из таблицы
@@ -25,15 +23,6 @@ sealed trait DAO[EntityType, IdType] {
               orderBy: SQLSyntax = Id.value,
               sort: SQLSyntax = ASC.value)
              (implicit session: DBSession): Seq[EntityType]
-
-  /**
-   * Получение Entity из таблицы по id
-   *
-   * @param id Entity которую необходимо получить
-   * @return Optional с Entity если такая есть в БД, иначе Option.empty
-   */
-  def findById(id: IdType)
-              (implicit session: DBSession): Option[EntityType]
 
   /**
    * Вставка новой Entity в таблицу
@@ -52,14 +41,6 @@ sealed trait DAO[EntityType, IdType] {
                      (implicit session: DBSession): Unit
 
   /**
-   * Удаление Entity из таблицы по id
-   *
-   * @param id Entity которую необходимо удалить
-   */
-  def deleteById(id: IdType)
-                (implicit session: DBSession): Unit
-
-  /**
    * Обновление Entity в таблице
    *
    * @param entity Entity которое будет обновлено
@@ -69,25 +50,132 @@ sealed trait DAO[EntityType, IdType] {
 
 }
 
-trait CQCElementDAO extends DAO[CQCElementEntity, UUID] {
-  def findChild(entity: CQCElementEntitySignature): Seq[CQCElementEntitySignature]
+trait SinglePKDAO[EntityType, IdType] extends DAO[EntityType] {
+  /**
+   * Получение Entity из таблицы по id
+   *
+   * @param id Entity которую необходимо получить
+   * @return Optional с Entity если такая есть в БД, иначе Option.empty
+   */
+  def findById(id: IdType)
+              (implicit session: DBSession): Option[EntityType]
+
+  /**
+   * Удаление Entity из таблицы по id
+   *
+   * @param id Entity которую необходимо удалить
+   */
+  def deleteById(id: IdType)
+                (implicit session: DBSession): Unit
+
 }
 
-trait CQCElementDictionaryDAO extends DAO[CQCElementDictionaryEntity, String]
+trait DoublePKDao[EntityType, IdType] extends DAO[EntityType] {
+  /**
+   * Получение Entity из таблицы по id
+   *
+   * @param id Entity которую необходимо получить
+   * @return Optional с Entity если такая есть в БД, иначе Option.empty
+   */
+  def findByDoubleId(id: (IdType, IdType))
+                    (implicit session: DBSession): Option[EntityType]
 
-trait CQCElementHierarchyDAO extends DAO[CQCElementHierarchyEntity, String] {
-  def findByParentType(parentType: String)
-                      (implicit session: DBSession): Option[CQCElementHierarchyEntity]
+  /**
+   * Удаление Entity из таблицы по id
+   *
+   * @param id Entity которую необходимо удалить
+   */
+  def deleteByDoubleId(id: (IdType, IdType))
+                      (implicit session: DBSession): Unit
+}
 
-  def findByChildType(childType: String)
-                     (implicit session: DBSession): Option[CQCElementHierarchyEntity]
+/**
+ * DAO для Элементов ККХ
+ * table: cqc_element
+ */
+trait CQCElementDAO extends SinglePKDAO[CQCElementEntity, UUID]
 
-  def findByDoubleKey(doubleKey: (String, String))
-                     (implicit session: DBSession): Option[CQCElementHierarchyEntity]
+/**
+ * DAO для словаря Элементов ККХ
+ * table: cqc_elem_dict
+ */
+trait CQCDictionaryDAO extends SinglePKDAO[CQCDictionaryEntity, String]
 
-  def deleteByDoubleKey(doubleKey: (String, String))
+/**
+ * DAO для иерархии элементов ККХ
+ * table: cqc_elem_hierarchy
+ */
+trait CQCHierarchyDAO extends DoublePKDao[CQCHierarchyEntity, String]
+
+/**
+ * DAO для курсов
+ * table: course
+ */
+trait CourseDAO extends SinglePKDAO[CourseEntity, UUID] {
+  /**
+   * Вставка связей входных Листов и курса
+   * table: course_input_leaf_link
+   *
+   * @param course курс с которым необходимо создать связи
+   */
+  def insertInputLeafs(course: CourseEntity)
+                      (implicit session: DBSession): Unit
+
+  /**
+   * Выборка входных Листов курса
+   * table: course_input_leaf_link
+   *
+   * @param course курс, к которому ищутся листы
+   * @return входные листы
+   */
+  def findInputLeafs(course: CourseTable)
+                    (implicit session: DBSession): Seq[CQCElementEntity]
+
+  /**
+   * Удаление связи курса и вхродных листов
+   *
+   * @param course курс связи которого надо удалить
+   */
+  def deleteInputLeafs(course: CourseEntity)
+                      (implicit session: DBSession): Unit
+
+  /**
+   * Вставка связей выходных Листов и курса
+   * table: course_output_leaf_link
+   *
+   * @param course курс с которым необходим создать связи
+   */
+  def insertOutputLeafs(course: CourseEntity)
                        (implicit session: DBSession): Unit
 
-  def updateByDoubleKey(doubleKey: (String, String))
+  /**
+   * Нахождение выходных Листов курса
+   *
+   * @param course курс, к которому ищутся листы
+   * @return выходные листы
+   */
+  def findOutputLeafs(course: CourseTable)
+                     (implicit session: DBSession): Seq[CQCElementEntity]
+
+  /**
+   * Удаление связей курса и выходных Листов
+   *
+   * @param course курс связи с которым необходимо удалить
+   */
+  def deleteOutputLeafs(course: CourseEntity)
                        (implicit session: DBSession): Unit
+
+  /**
+   * Вставка связей курса с входными и выходными листами
+   * @param course курс связи с которым необходимо вставить
+   */
+  def insertLeafs(course: CourseEntity)
+                    (implicit session: DBSession): Unit
+
+  /**
+   * Удаление связей курса с входными и выходными листами
+   * @param course курс связи с которым необходимо удалить
+   */
+  def deleteLeafs(course: CourseEntity)
+                 (implicit session: DBSession): Unit
 }

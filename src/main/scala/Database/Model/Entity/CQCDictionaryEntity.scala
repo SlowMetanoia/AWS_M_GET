@@ -1,13 +1,15 @@
 package Database.Model.Entity
 
-import Database.Mapper.CQCElementDictionaryMapper
-import Database.Table.CQCElementDictionaryTable
-import Database.Table.CQCElementDictionaryTable.{cqcDict, cqcDictC}
+import Database.Mapper.CQCDictionaryMapper
+import Database.Model.Table.CQCDictionaryTable
+import Database.Signature.EntityAndTable.CQCDictionaryEntitySignature
+import CQCDictionaryTable.{cqcDict, cqcDictC}
+import Database.Model.EntityModel
 import scalikejdbc._
 
-case class CQCElementDictionaryEntity(name: String) extends CQCElementDictionaryEntitySignature
+case class CQCDictionaryEntity(name: String) extends CQCDictionaryEntitySignature with EntityModel
 
-object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
+object CQCDictionaryEntity extends CQCDictionaryDAO {
   /**
    * Получение всех Видов элементов ККХ из таблицы
    *
@@ -21,16 +23,16 @@ object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
                        offset: Int,
                        orderBy: SQLSyntax,
                        sort: SQLSyntax)
-                      (implicit session: DBSession): Seq[CQCElementDictionaryEntity] = {
-    val rows: Seq[CQCElementDictionaryTable] =
+                      (implicit session: DBSession): Seq[CQCDictionaryEntity] = {
+    val rows: Seq[CQCDictionaryTable] =
       withSQL {
-        select.all(cqcDict).from(CQCElementDictionaryTable as cqcDict)
+        select.all(cqcDict).from(CQCDictionaryTable as cqcDict)
           .orderBy(orderBy)
           .limit(limit)
           .offset(offset)
-      }.map(CQCElementDictionaryTable(cqcDict.resultName)).collection.apply()
+      }.map(CQCDictionaryTable(cqcDict.resultName)).collection.apply()
 
-    rows.map(CQCElementDictionaryMapper.tableRow2Entity)
+    rows.map(CQCDictionaryMapper.tableRow2Entity)
   }
 
   /**
@@ -40,14 +42,14 @@ object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
    * @return Optional с Видом элементов ККХ
    */
   override def findById(id: String)
-                       (implicit session: DBSession): Option[CQCElementDictionaryEntity] = {
-    val row: Option[CQCElementDictionaryTable] =
+                       (implicit session: DBSession): Option[CQCDictionaryEntity] = {
+    val row: Option[CQCDictionaryTable] =
       withSQL {
-        select.from(CQCElementDictionaryTable as cqcDict)
+        select.from(CQCDictionaryTable as cqcDict)
           .where.eq(cqcDict.name, id)
-      }.map(CQCElementDictionaryTable(cqcDict.resultName)).single.apply()
+      }.map(CQCDictionaryTable(cqcDict.resultName)).single.apply()
 
-    row.map(CQCElementDictionaryMapper.tableRow2Entity)
+    row.map(CQCDictionaryMapper.tableRow2Entity)
   }
 
   /**
@@ -55,11 +57,11 @@ object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
    *
    * @param entity Вид элемента ККХ который необходимо вставить в таблицу
    */
-  override def insert(entity: CQCElementDictionaryEntity)
+  override def insert(entity: CQCDictionaryEntity)
                      (implicit session: DBSession): Unit = {
-    val row = CQCElementDictionaryMapper.entity2TableRow(entity)
+    val row = CQCDictionaryMapper.entity2TableRow(entity)
     withSQL {
-      insertInto(CQCElementDictionaryTable)
+      insertInto(CQCDictionaryTable)
         .namedValues(
           cqcDictC.name -> row.name
         )
@@ -71,13 +73,13 @@ object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
    *
    * @param entityList список KAS'ов которые мы хотим вставить
    */
-  override def insertMultiRows(entityList: Seq[CQCElementDictionaryEntity])
+  override def insertMultiRows(entityList: Seq[CQCDictionaryEntity])
                               (implicit session: DBSession): Unit = {
-    val batchParams: Seq[Seq[Any]] = entityList.map(CQCElementDictionaryMapper.entity2TableRow)
+    val batchParams: Seq[Seq[Any]] = entityList.map(CQCDictionaryMapper.entity2TableRow)
       .map(elem => Seq(elem.name))
 
     withSQL {
-      insertInto(CQCElementDictionaryTable)
+      insertInto(CQCDictionaryTable)
         .namedValues(
           cqcDictC.name -> sqls.?
         )
@@ -92,7 +94,7 @@ object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
   override def deleteById(id: String)
                          (implicit session: DBSession): Unit =
     withSQL {
-      deleteFrom(CQCElementDictionaryTable)
+      deleteFrom(CQCDictionaryTable)
         .where.eq(cqcDictC.name, id)
     }.update.apply()
 
@@ -102,11 +104,11 @@ object CQCElementDictionaryEntity extends CQCElementDictionaryDAO {
    *
    * @param entity Вид элемента ККХ которое будет обновлено
    */
-  override def update(entity: CQCElementDictionaryEntity)
+  override def update(entity: CQCDictionaryEntity)
                      (implicit session: DBSession): Unit = {
-    val row = CQCElementDictionaryMapper.entity2TableRow(entity)
+    val row = CQCDictionaryMapper.entity2TableRow(entity)
     withSQL {
-      QueryDSL.update(CQCElementDictionaryTable)
+      QueryDSL.update(CQCDictionaryTable)
         .set(
           cqcDictC.name -> row.name,
         )
