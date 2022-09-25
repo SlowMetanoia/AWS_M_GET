@@ -1,7 +1,8 @@
 package Database.DataModel.Table
 
 import Database.DataModel.TableModel
-import Database.Signature.EntityAndTable.CQCElementEntitySignature
+import Database.Signature.Entity.CQCElementEntitySignature
+import Database.Signature.Table.CQCElementTableSignature
 import scalikejdbc._
 
 import java.util.UUID
@@ -16,7 +17,7 @@ import java.util.UUID
 case class CQCElementTable(id: UUID,
                            parentId: UUID,
                            elemType: String,
-                           value: String) extends CQCElementEntitySignature with TableModel
+                           value: String) extends CQCElementTableSignature with TableModel
 
 object CQCElementTable extends SQLSyntaxSupport[CQCElementTable] {
   val cqc: QuerySQLSyntaxProvider[SQLSyntaxSupport[CQCElementTable], CQCElementTable] = CQCElementTable.syntax("cqc")

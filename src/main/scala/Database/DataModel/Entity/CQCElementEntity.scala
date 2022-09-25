@@ -1,10 +1,10 @@
 package Database.DataModel.Entity
 
-import Database.Mapper.CQCElementMapper
-import Database.DataModel.HierarchyEntityModel
+import Database.DataModel.EntityModel
 import Database.DataModel.Table.CQCElementTable
 import Database.DataModel.Table.CQCElementTable.{cqc, cqcC}
-import Database.Signature.EntityAndTable.CQCElementEntitySignature
+import Database.Mapper.CQCElementMapper
+import Database.Signature.Entity.CQCElementEntitySignature
 import scalikejdbc._
 
 import java.util.UUID
@@ -12,7 +12,7 @@ import java.util.UUID
 case class CQCElementEntity(id: UUID,
                             parentId: UUID,
                             elemType: String,
-                            value: String) extends CQCElementEntitySignature with HierarchyEntityModel {
+                            value: String) extends CQCElementEntitySignature with EntityModel with UUIDFactory {
   /**
    * Получение родителя Элемента ККХ
    *
@@ -21,9 +21,9 @@ case class CQCElementEntity(id: UUID,
   override def parent(implicit session: DBSession): Option[CQCElementEntity] = {
     val row: Option[CQCElementTable] =
       withSQL {
-      select.from(CQCElementTable as cqc)
-        .where.eq(cqc.parentId, parentId)
-    }.map(CQCElementTable(cqc.resultName)).single.apply()
+        select.from(CQCElementTable as cqc)
+          .where.eq(cqc.parentId, parentId)
+      }.map(CQCElementTable(cqc.resultName)).single.apply()
 
     row.map(CQCElementMapper.tableRow2Entity)
   }
@@ -44,7 +44,7 @@ case class CQCElementEntity(id: UUID,
   }
 }
 
-object CQCElementEntity extends CQCElementDAO {
+object CQCElementEntity extends CQCElementDAO with UUIDFactory {
 
   /**
    * Получение всех Элементов ККХ из таблицы

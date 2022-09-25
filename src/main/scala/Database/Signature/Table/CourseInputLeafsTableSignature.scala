@@ -1,10 +1,10 @@
-package Database.Signature.EntityAndTable
+package Database.Signature.Table
 
 import Database.Signature.TableSignature
 
 import java.util.UUID
 
-trait CourseOutputLeafsSignature extends TableSignature {
+trait CourseInputLeafsTableSignature extends TableSignature {
   val courseId: UUID
   val leafId: UUID
 }

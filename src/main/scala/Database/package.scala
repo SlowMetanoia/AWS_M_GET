@@ -27,12 +27,12 @@ package object Database {
 
   object DESC extends SQLSyntaxProvider(SQLSyntaxProvider("DESC"))
 
-  val SQLOperatorsDictionary = Map(
+  val SQLOperatorsDictionary: Map[String, SQLSyntax] = Map(
     "asc" -> ASC.value,
     "desc" -> DESC.value,
   )
 
-  val SQLOrderByDictionary = Map(
+  val SQLOrderByDictionary: Map[String, SQLSyntax] = Map(
     "id" -> Id.value,
     "name" -> Name.value
   )

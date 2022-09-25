@@ -1,10 +1,10 @@
 package Database.DataModel.Table
 
 import Database.DataModel.TableModel
-import Database.Signature.EntityAndTable.CQCDictionaryEntitySignature
+import Database.Signature.Table.CQCDictionaryTableSignature
 import scalikejdbc._
 
-case class CQCDictionaryTable(name: String) extends CQCDictionaryEntitySignature with TableModel
+case class CQCDictionaryTable(name: String) extends CQCDictionaryTableSignature with TableModel
 
 object CQCDictionaryTable extends SQLSyntaxSupport[CQCDictionaryTable] {
   val cqcDict: QuerySQLSyntaxProvider[SQLSyntaxSupport[CQCDictionaryTable], CQCDictionaryTable] = CQCDictionaryTable.syntax("cqc_dict")

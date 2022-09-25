@@ -1,9 +1,9 @@
 package Database.Mapper
-import Database.DataModel.Domain.CQCElement.CQCPartModel
+import Database.DataModel.Model.CQCElement.{CQCElement, CQCElementLeaf, CQCElementRoot}
 import Database.DataModel.Entity.CQCElementEntity
 import Database.DataModel.Table.CQCElementTable
 
-object CQCElementMapper extends CQCElementEntityMapper {
+object CQCElementMapper extends CQCElementDataMapper {
   override def tableRow2Entity(row: CQCElementTable): CQCElementEntity =
     CQCElementEntity(
       id = row.id,
@@ -20,7 +20,23 @@ object CQCElementMapper extends CQCElementEntityMapper {
       value = entity.value
     )
 
-  override def entity2Model(entity: CQCElementEntity): CQCPartModel = ???
+  override def entity2Model(entity: CQCElementEntity): CQCElement = ???
 
-  override def model2Entity(model: CQCPartModel): CQCElementEntity = ???
+  override def model2Entity(model: CQCElement): CQCElementEntity = ???
+
+  override def entity2RootModel(entity: CQCElementEntity): CQCElementRoot = {
+    CQCElementRoot(
+      id = entity.id,
+      elemType = entity.elemType,
+      value = entity.value
+    )
+  }
+
+  override def entity2LeafModel(entity: CQCElementEntity): CQCElementLeaf =
+    CQCElementLeaf(
+      id = entity.id,
+      parentId = entity.parentId,
+      elemType = entity.elemType,
+      value = entity.value
+    )
 }

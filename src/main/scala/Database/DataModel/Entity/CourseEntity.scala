@@ -1,24 +1,28 @@
 package Database.DataModel.Entity
 
-import Database.Mapper.CQCElementMapper
 import Database.DataModel.EntityModel
 import Database.DataModel.Table.CQCElementTable.cqc
 import Database.DataModel.Table.CourseInputLeafsTable.{cil, cilC}
 import Database.DataModel.Table.CourseOutputLeafsTable.{col, colC}
 import Database.DataModel.Table.CourseTable.{c, cC}
 import Database.DataModel.Table.{CQCElementTable, CourseInputLeafsTable, CourseOutputLeafsTable, CourseTable}
-import Database.Signature.EntityAndTable.{CQCElementEntitySignature, CourseEntitySignature}
+import Database.Mapper.CQCElementMapper
+import Database.Signature.Entity.{CQCElementEntitySignature, CourseEntitySignature}
 import scalikejdbc._
 
 import java.util.UUID
 
 case class CourseEntity(id: UUID,
                         name: String,
-                        inputLeaf: Seq[CQCElementEntitySignature],
-                        outputLeaf: Seq[CQCElementEntitySignature]
-                       ) extends CourseEntitySignature with EntityModel
+                        inputLeaf: Seq[CQCElementEntity],
+                        outputLeaf: Seq[CQCElementEntity]
+                       ) extends CourseEntitySignature with EntityModel {
 
-object CourseEntity extends CourseDAO {
+
+  override def parts(implicit session: DBSession): Map[String, CQCElementEntity] = ???
+}
+
+object CourseEntity extends CourseDAO with UUIDFactory {
   /**
    * Вставка связей входных Листов и курса
    * table: course_input_leaf_link
@@ -142,7 +146,8 @@ object CourseEntity extends CourseDAO {
     deleteInputLeafs(course)
     deleteOutputLeafs(course)
   }
-/**
+
+  /**
    * Получение Entity из таблицы по id
    *
    * @param id Entity которую необходимо получить

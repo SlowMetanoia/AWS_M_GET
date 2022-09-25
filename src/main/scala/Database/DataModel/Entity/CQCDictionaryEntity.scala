@@ -1,15 +1,15 @@
 package Database.DataModel.Entity
 
-import Database.Mapper.CQCDictionaryMapper
-import Database.DataModel.Table.CQCDictionaryTable
-import Database.Signature.EntityAndTable.CQCDictionaryEntitySignature
-import CQCDictionaryTable.{cqcDict, cqcDictC}
 import Database.DataModel.EntityModel
+import Database.DataModel.Table.CQCDictionaryTable
+import Database.DataModel.Table.CQCDictionaryTable.{cqcDict, cqcDictC}
+import Database.Mapper.CQCDictionaryMapper
+import Database.Signature.Entity.CQCDictionaryEntitySignature
 import scalikejdbc._
 
 case class CQCDictionaryEntity(name: String) extends CQCDictionaryEntitySignature with EntityModel
 
-object CQCDictionaryEntity extends CQCDictionaryDAO {
+object CQCDictionaryEntity extends CQCDictionaryDAO with UUIDFactory {
   /**
    * Получение всех Видов элементов ККХ из таблицы
    *

@@ -7,7 +7,7 @@ import scalikejdbc.interpolation.SQLSyntax
 
 import java.util.UUID
 
-sealed trait DAO[EntityType] extends UUIDFactory {
+sealed trait DAO[EntityType] {
 
   /**
    * Получение всех Entity из таблицы
@@ -105,7 +105,14 @@ trait CQCDictionaryDAO extends SinglePKDAO[CQCDictionaryEntity, String]
  * DAO для иерархии элементов ККХ
  * table: cqc_elem_hierarchy
  */
-trait CQCHierarchyDAO extends DoublePKDao[CQCHierarchyEntity, String]
+trait CQCHierarchyDAO extends DoublePKDao[CQCHierarchyEntity, String] {
+  /**
+   * Получение текущих отношений между элементами иерархии
+   *
+   * @return иерархия отношений
+   */
+  def relations: Map[String, String] = ???
+}
 
 /**
  * DAO для курсов

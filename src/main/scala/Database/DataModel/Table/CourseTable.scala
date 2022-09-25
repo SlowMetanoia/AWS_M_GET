@@ -1,7 +1,8 @@
 package Database.DataModel.Table
 
 import Database.DataModel.TableModel
-import Database.Signature.EntityAndTable.CourseTableSignature
+import Database.Signature.Entity.CourseEntitySignature
+import Database.Signature.Table.CourseTableSignature
 import scalikejdbc._
 
 import java.util.UUID

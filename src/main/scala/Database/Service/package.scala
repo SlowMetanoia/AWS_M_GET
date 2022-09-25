@@ -1,7 +1,7 @@
 package Database
 
-import Database.DataModel.Domain.{CQCDictionaryModel, CQCHierarchyModel, CourseModel}
-import Database.Signature.Model.{CQCElementDictionaryModelSignature, CQCHierarchyModelSignature, CourseModelSignature, HierarchyPartSignature}
+import Database.DataModel.Model.CQCElement.CQCElement
+import Database.DataModel.Model.{CQCDictionary, CQCHierarchy, Course}
 import Database.Signature.ModelSignature
 
 import java.util.UUID
@@ -67,8 +67,18 @@ package object Service {
                   (dbName: String = "default"): Unit
   }
 
-  trait CourseService extends CRUDService[CourseModel, UUID]
-  trait CQCElementService extends CRUDService[HierarchyPartSignature, UUID]
-  trait CQCHierarchyService extends CRUDService[CQCHierarchyModel, (String, String)]
-  trait CQCDictionaryService extends CRUDService[CQCDictionaryModel, String]
+  trait CourseDataService extends CRUDService[Course, UUID]
+
+  trait CQCElementDataService extends CRUDService[CQCElement, UUID]
+
+  trait CQCDictionaryDataService extends CRUDService[CQCDictionary, String]
+
+  trait CQCHierarchyDataService extends CRUDService[CQCHierarchy, (String, String)] {
+    /**
+     * Получение текущих отношений между элементами иерархии
+     *
+     * @return иерархия отношений
+     */
+    def relations: Map[String, String]
+  }
 }

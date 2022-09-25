@@ -1,16 +1,22 @@
 package Database.DataModel.Entity
 
-import Database.Mapper.CQCHierarchyMapper
-import Database.DataModel.Table.CQCHierarchyTable
-import Database.Signature.EntityAndTable.CQCHierarchyEntitySignature
-import CQCHierarchyTable.{cqcHier, cqcHierC}
 import Database.DataModel.EntityModel
+import Database.DataModel.Table.CQCHierarchyTable
+import Database.DataModel.Table.CQCHierarchyTable.{cqcHier, cqcHierC}
+import Database.Mapper.CQCHierarchyMapper
+import Database.Signature.Entity.CQCHierarchyEntitySignature
 import scalikejdbc._
 
 case class CQCHierarchyEntity(childType: String,
                               parentType: String) extends CQCHierarchyEntitySignature with EntityModel
 
-object CQCHierarchyEntity extends CQCHierarchyDAO {
+object CQCHierarchyEntity extends CQCHierarchyDAO with UUIDFactory {
+  /**
+   * Получение текущих отношений между элементами иерархии
+   *
+   * @return иерархия отношений
+   */
+  override def relations: Map[String, String] = ???
 
   /**
    * Получение Уровня иерархии из таблицы по id
@@ -22,11 +28,11 @@ object CQCHierarchyEntity extends CQCHierarchyDAO {
                              (implicit session: DBSession): Option[CQCHierarchyEntity] = {
     val row: Option[CQCHierarchyTable] =
       withSQL {
-      select.from(CQCHierarchyTable as cqcHier)
-        .where.eq(cqcHier.childType, id._1)
-        .and
-        .eq(cqcHier.parentType, id._2)
-    }.map(CQCHierarchyTable(cqcHier.resultName)).single.apply()
+        select.from(CQCHierarchyTable as cqcHier)
+          .where.eq(cqcHier.childType, id._1)
+          .and
+          .eq(cqcHier.parentType, id._2)
+      }.map(CQCHierarchyTable(cqcHier.resultName)).single.apply()
 
     row.map(CQCHierarchyMapper.tableRow2Entity)
   }

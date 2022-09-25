@@ -1,13 +1,13 @@
 package Database.DataModel.Table
 
 import Database.DataModel.TableModel
-import Database.Signature.EntityAndTable.CourseOutputLeafsSignature
+import Database.Signature.Table.CourseOutputLeafsTableSignature
 import scalikejdbc._
 
 import java.util.UUID
 
 case class CourseOutputLeafsTable(courseId: UUID,
-                                  leafId: UUID) extends CourseOutputLeafsSignature with TableModel
+                                  leafId: UUID) extends CourseOutputLeafsTableSignature with TableModel
 
 object CourseOutputLeafsTable extends SQLSyntaxSupport[CourseOutputLeafsTable] {
   val col: QuerySQLSyntaxProvider[SQLSyntaxSupport[CourseOutputLeafsTable], CourseOutputLeafsTable] = CourseOutputLeafsTable.syntax("c_o_l")

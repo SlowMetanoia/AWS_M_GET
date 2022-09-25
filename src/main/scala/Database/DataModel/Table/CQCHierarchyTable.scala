@@ -1,7 +1,7 @@
 package Database.DataModel.Table
 
 import Database.DataModel.TableModel
-import Database.Signature.EntityAndTable.CQCHierarchyEntitySignature
+import Database.Signature.Table.CQCHierarchyTableSignature
 import scalikejdbc._
 
 /**
@@ -11,7 +11,7 @@ import scalikejdbc._
  * @param parentType тип родителя
  */
 case class CQCHierarchyTable(childType: String,
-                             parentType: String) extends CQCHierarchyEntitySignature with TableModel
+                             parentType: String) extends CQCHierarchyTableSignature with TableModel
 
 object CQCHierarchyTable extends SQLSyntaxSupport[CQCHierarchyTable] {
   val cqcHier: QuerySQLSyntaxProvider[SQLSyntaxSupport[CQCHierarchyTable], CQCHierarchyTable] = CQCHierarchyTable.syntax("cqcElHier")
