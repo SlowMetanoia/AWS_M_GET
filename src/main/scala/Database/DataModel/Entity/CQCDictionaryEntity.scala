@@ -1,10 +1,10 @@
-package Database.Model.Entity
+package Database.DataModel.Entity
 
 import Database.Mapper.CQCDictionaryMapper
-import Database.Model.Table.CQCDictionaryTable
+import Database.DataModel.Table.CQCDictionaryTable
 import Database.Signature.EntityAndTable.CQCDictionaryEntitySignature
 import CQCDictionaryTable.{cqcDict, cqcDictC}
-import Database.Model.EntityModel
+import Database.DataModel.EntityModel
 import scalikejdbc._
 
 case class CQCDictionaryEntity(name: String) extends CQCDictionaryEntitySignature with EntityModel

@@ -1,6 +1,8 @@
 package Database.Mapper
-import Database.Model.Entity.CQCDictionaryEntity
-import Database.Model.Table.CQCDictionaryTable
+
+import Database.DataModel.Domain.CQCDictionaryModel
+import Database.DataModel.Entity.CQCDictionaryEntity
+import Database.DataModel.Table.CQCDictionaryTable
 
 object CQCDictionaryMapper extends CQCDictionaryEntityMapper {
   override def tableRow2Entity(row: CQCDictionaryTable): CQCDictionaryEntity =
@@ -11,5 +13,15 @@ object CQCDictionaryMapper extends CQCDictionaryEntityMapper {
   override def entity2TableRow(entity: CQCDictionaryEntity): CQCDictionaryTable =
     CQCDictionaryTable(
       name = entity.name
+    )
+
+  override def entity2Model(entity: CQCDictionaryEntity): CQCDictionaryModel =
+    CQCDictionaryModel(
+      name = entity.name
+    )
+
+  override def model2Entity(model: CQCDictionaryModel): CQCDictionaryEntity =
+    CQCDictionaryEntity(
+      name = model.name
     )
 }

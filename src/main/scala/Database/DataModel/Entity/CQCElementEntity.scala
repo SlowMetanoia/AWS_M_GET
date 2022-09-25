@@ -1,9 +1,9 @@
-package Database.Model.Entity
+package Database.DataModel.Entity
 
 import Database.Mapper.CQCElementMapper
-import Database.Model.HierarchyEntityModel
-import Database.Model.Table.CQCElementTable
-import Database.Model.Table.CQCElementTable.{cqc, cqcC}
+import Database.DataModel.HierarchyEntityModel
+import Database.DataModel.Table.CQCElementTable
+import Database.DataModel.Table.CQCElementTable.{cqc, cqcC}
 import Database.Signature.EntityAndTable.CQCElementEntitySignature
 import scalikejdbc._
 

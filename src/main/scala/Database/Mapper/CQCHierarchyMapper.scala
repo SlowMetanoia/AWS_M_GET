@@ -1,6 +1,7 @@
 package Database.Mapper
-import Database.Model.Entity.CQCHierarchyEntity
-import Database.Model.Table.CQCHierarchyTable
+import Database.DataModel.Domain.CQCHierarchyModel
+import Database.DataModel.Entity.CQCHierarchyEntity
+import Database.DataModel.Table.CQCHierarchyTable
 
 object CQCHierarchyMapper extends CQCHierarchyEntityMapper {
   override def tableRow2Entity(row: CQCHierarchyTable): CQCHierarchyEntity =
@@ -14,4 +15,8 @@ object CQCHierarchyMapper extends CQCHierarchyEntityMapper {
       childType = entity.childType,
       parentType = entity.parentType
     )
+
+  override def entity2Model(entity: CQCHierarchyEntity): CQCHierarchyModel = ???
+
+  override def model2Entity(model: CQCHierarchyModel): CQCHierarchyEntity = ???
 }

@@ -1,10 +1,10 @@
-package Database.Model.Entity
+package Database.DataModel.Entity
 
 import Database.Mapper.CQCHierarchyMapper
-import Database.Model.Table.CQCHierarchyTable
+import Database.DataModel.Table.CQCHierarchyTable
 import Database.Signature.EntityAndTable.CQCHierarchyEntitySignature
 import CQCHierarchyTable.{cqcHier, cqcHierC}
-import Database.Model.EntityModel
+import Database.DataModel.EntityModel
 import scalikejdbc._
 
 case class CQCHierarchyEntity(childType: String,

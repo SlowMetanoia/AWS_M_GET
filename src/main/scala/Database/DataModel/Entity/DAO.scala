@@ -1,6 +1,6 @@
-package Database.Model.Entity
+package Database.DataModel.Entity
 
-import Database.Model.Table.CourseTable
+import Database.DataModel.Table.CourseTable
 import Database.{ASC, Id}
 import scalikejdbc.DBSession
 import scalikejdbc.interpolation.SQLSyntax

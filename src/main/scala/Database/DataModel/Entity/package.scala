@@ -1,4 +1,4 @@
-package Database.Model
+package Database.DataModel
 
 import scalikejdbc.ParameterBinderFactory
 

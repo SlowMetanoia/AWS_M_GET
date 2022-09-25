@@ -1,12 +1,12 @@
-package Database.Model.Entity
+package Database.DataModel.Entity
 
 import Database.Mapper.CQCElementMapper
-import Database.Model.EntityModel
-import Database.Model.Table.CQCElementTable.cqc
-import Database.Model.Table.CourseInputLeafsTable.{cil, cilC}
-import Database.Model.Table.CourseOutputLeafsTable.{col, colC}
-import Database.Model.Table.CourseTable.{c, cC}
-import Database.Model.Table.{CQCElementTable, CourseInputLeafsTable, CourseOutputLeafsTable, CourseTable}
+import Database.DataModel.EntityModel
+import Database.DataModel.Table.CQCElementTable.cqc
+import Database.DataModel.Table.CourseInputLeafsTable.{cil, cilC}
+import Database.DataModel.Table.CourseOutputLeafsTable.{col, colC}
+import Database.DataModel.Table.CourseTable.{c, cC}
+import Database.DataModel.Table.{CQCElementTable, CourseInputLeafsTable, CourseOutputLeafsTable, CourseTable}
 import Database.Signature.EntityAndTable.{CQCElementEntitySignature, CourseEntitySignature}
 import scalikejdbc._
 

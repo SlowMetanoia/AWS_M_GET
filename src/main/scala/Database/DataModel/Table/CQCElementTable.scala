@@ -1,6 +1,6 @@
-package Database.Model.Table
+package Database.DataModel.Table
 
-import Database.Model.TableModel
+import Database.DataModel.TableModel
 import Database.Signature.EntityAndTable.CQCElementEntitySignature
 import scalikejdbc._
 

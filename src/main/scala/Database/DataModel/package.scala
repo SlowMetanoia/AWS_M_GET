@@ -1,9 +1,9 @@
 package Database
 
-import Database.Model.Entity.{CQCElementEntity, UUIDFactory}
+import Database.DataModel.Entity.{CQCElementEntity, UUIDFactory}
 import scalikejdbc.DBSession
 
-package object Model {
+package object DataModel {
   trait EntityModel
   trait TableModel
   trait DomainModel

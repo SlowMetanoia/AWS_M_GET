@@ -1,6 +1,7 @@
 package Database.Mapper
-import Database.Model.Entity.CQCElementEntity
-import Database.Model.Table.CQCElementTable
+import Database.DataModel.Domain.CQCElement.CQCPartModel
+import Database.DataModel.Entity.CQCElementEntity
+import Database.DataModel.Table.CQCElementTable
 
 object CQCElementMapper extends CQCElementEntityMapper {
   override def tableRow2Entity(row: CQCElementTable): CQCElementEntity =
@@ -18,4 +19,8 @@ object CQCElementMapper extends CQCElementEntityMapper {
       elemType = entity.elemType,
       value = entity.value
     )
+
+  override def entity2Model(entity: CQCElementEntity): CQCPartModel = ???
+
+  override def model2Entity(model: CQCPartModel): CQCElementEntity = ???
 }
