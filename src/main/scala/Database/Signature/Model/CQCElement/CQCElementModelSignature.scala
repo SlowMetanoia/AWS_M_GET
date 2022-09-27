@@ -13,12 +13,12 @@ trait CQCElementModelSignature extends CQCHierarchyElementModelSignature {
    *
    * @return родителя
    */
-  def parent: Option[CQCElementModelSignature] = ???
+  def parent(dbName: String): Option[CQCElementModelSignature]
 
   /**
    * Получением потомков Элемента ККХ
    *
    * @return последовательноть потомков Элемента ККХ
    */
-  def children: Seq[CQCElementModelSignature] = ???
+  def children(dbName: String): Seq[CQCElementModelSignature]
 }

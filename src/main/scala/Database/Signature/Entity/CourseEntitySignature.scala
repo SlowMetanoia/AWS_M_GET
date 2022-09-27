@@ -17,5 +17,5 @@ trait CourseEntitySignature extends EntitySignature {
    *
    * @return последовательность элементов ККХ
    */
-  def parts(implicit session: DBSession): Map[String, CQCElementEntity]
+  def parts(implicit session: DBSession): Map[String, Seq[CQCElementEntity]]
 }

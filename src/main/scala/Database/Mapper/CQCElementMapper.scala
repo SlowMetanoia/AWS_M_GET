@@ -20,9 +20,21 @@ object CQCElementMapper extends CQCElementDataMapper {
       value = entity.value
     )
 
-  override def entity2Model(entity: CQCElementEntity): CQCElement = ???
+  override def entity2Model(entity: CQCElementEntity): CQCElement =
+    CQCElement(
+      id = entity.id,
+      parentId = entity.parentId,
+      elemType = entity.elemType,
+      value = entity.value
+    )
 
-  override def model2Entity(model: CQCElement): CQCElementEntity = ???
+  override def model2Entity(model: CQCElement): CQCElementEntity =
+    CQCElementEntity(
+      id = model.id,
+      parentId = model.parentId,
+      elemType = model.elemType,
+      value = model.value
+    )
 
   override def entity2RootModel(entity: CQCElementEntity): CQCElementRoot = {
     CQCElementRoot(
@@ -38,5 +50,21 @@ object CQCElementMapper extends CQCElementDataMapper {
       parentId = entity.parentId,
       elemType = entity.elemType,
       value = entity.value
+    )
+
+  override def rootModel2Entity(root: CQCElementRoot): CQCElementEntity =
+    CQCElementEntity(
+      id = root.id,
+      parentId = null,
+      elemType = root.elemType,
+      value = root.value
+    )
+
+  override def leafModel2Entity(leaf: CQCElementLeaf): CQCElementEntity =
+    CQCElementEntity(
+      id = leaf.id,
+      parentId = leaf.parentId,
+      elemType = leaf.elemType,
+      value = leaf.value
     )
 }

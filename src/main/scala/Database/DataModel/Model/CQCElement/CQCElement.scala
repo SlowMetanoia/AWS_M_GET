@@ -1,7 +1,9 @@
 package Database.DataModel.Model.CQCElement
 
 import Database.DataModel.DomainModel
+import Database.Mapper.CQCElementMapper
 import Database.Signature.Model.CQCElement.CQCElementModelSignature
+import scalikejdbc.NamedDB
 
 import java.util.UUID
 
@@ -14,14 +16,18 @@ case class CQCElement(id: UUID,
    *
    * @return последовательноть потомков Элемента ККХ
    */
-    //todo: получение детей
-  override def children: Seq[CQCElement] = ???
+  override def children(dbName: String): Seq[CQCElement] =
+    NamedDB(dbName) localTx { implicit session =>
+      CQCElementMapper.model2Entity(this).children.map(CQCElementMapper.entity2Model)
+    }
 
   /**
    * Получение родителя Элемента ККХ
    *
    * @return родителя
    */
-    //todo: поулчение родителей
-  override def parent: Option[CQCElement] = ???
+  override def parent(dbName: String): Option[CQCElement] =
+    NamedDB(dbName) localTx { implicit session =>
+      CQCElementMapper.model2Entity(this).parent.map(CQCElementMapper.entity2Model)
+    }
 }

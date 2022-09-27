@@ -136,8 +136,6 @@ ALTER TABLE course_input_leaf_link
             REFERENCES cqc_element (id)
             ON DELETE CASCADE;
 
-DROP TABLE course_input_leaf_link;
-DROP TABLE course_output_leaf_link;
 
 CREATE OR REPLACE FUNCTION course_leaf_insert_trigger() RETURNS trigger AS
 $trigger_code$
@@ -145,7 +143,8 @@ BEGIN
     IF ((SELECT parent_type
          FROM cqc_elem_hierarchy
          WHERE parent_type =
-               (SELECT type FROM cqc_element WHERE id = NEW.leaf_id) LIMIT 1) IS NOT NULL) THEN
+               (SELECT type FROM cqc_element WHERE id = NEW.leaf_id)
+         LIMIT 1) IS NOT NULL) THEN
         RAISE EXCEPTION 'invalid relationship';
     END IF;
     RETURN NEW;
@@ -164,6 +163,66 @@ CREATE TRIGGER course_output_leaf_insert_trigger
     FOR EACH ROW
 EXECUTE PROCEDURE course_leaf_insert_trigger();
 
+CREATE OR REPLACE FUNCTION get_course_parts(leafArr uuid[])
+    RETURNS TABLE
+            (
+                id        uuid,
+                parent_id uuid,
+                type      varchar(128),
+                value     varchar(250)
+            )
+AS
+$code$
+DECLARE
+    temp UUID;
+    res  UUID[];
+
+BEGIN
+    CREATE TEMP TABLE steps
+    (
+        stepNumber SERIAL,
+        step       UUID[]
+    );
+
+    INSERT INTO steps(step)
+    VALUES (leafArr);
+
+    res := leafArr;
+
+    WHILE (NOT ((SELECT step FROM steps ORDER BY stepNumber DESC LIMIT 1) = '{}'))
+        LOOP
+            DECLARE
+                tempArr UUID[];
+
+            BEGIN
+                FOREACH temp IN ARRAY (SELECT step FROM steps ORDER BY stepNumber DESC LIMIT 1)
+                    LOOP
+                        tempArr := ARRAY(SELECT cqc_element.parent_id
+                                         FROM cqc_element
+                                         WHERE cqc_element.parent_id IS NOT NULL
+                                           AND cqc_element.id = temp);
+
+                        res := array_cat(res, tempArr);
+                        INSERT INTO steps(step) VALUES (tempArr);
+                    END LOOP;
+            END;
+        END LOOP;
+    DROP TABLE steps;
+
+    -- Чтобы из массива убрать дубликаты его нужно развернуть в таблицу с одним столбцом
+    -- сделать по этой таблице DISTINCT и результат обратно собрать в массив
+    RETURN QUERY (SELECT * FROM cqc_element WHERE cqc_element.id IN (SELECT DISTINCT r FROM unnest(res) AS result(r)));
+END;
+$code$ LANGUAGE plpgsql;
+
+SELECT *
+FROM get_course_parts(ARRAY ['7e7a1515-334f-4869-8cf8-02ab53f375f6', 'b0d7e57c-4ae1-4f96-9f69-8170700a4774', 'c7836ea8-eb7c-4eb3-bf35-2f8e43a963a2']::UUID[]);
+
+SELECT *
+FROM cqc_element
+WHERE parent_id IS NOT NULL
+  AND id = 'c7836ea8-eb7c-4eb3-bf35-2f8e43a963a2';
+
 INSERT INTO course
 VALUES ('78168bf0-ef00-44f3-81de-e0c6b3338ddc', 'Курсик1'),
        ('10321d6e-dcfe-46c8-8674-20aea5fa4c1a', 'Курсик2');
@@ -173,3 +232,18 @@ VALUES ('78168bf0-ef00-44f3-81de-e0c6b3338ddc', 'a02a0918-f362-4a85-ae4c-f696085
 
 INSERT INTO course_input_leaf_link
 VALUES ('78168bf0-ef00-44f3-81de-e0c6b3338ddc', '04293cea-fa4d-482b-b08d-7fc4691236e7');
+
+INSERT INTO cqc_element
+VALUES (gen_random_uuid(), null, 'Компетенция', 'Компетенция1'),
+       (gen_random_uuid(), null, 'Компетенция', 'Компетенция2'),
+       (gen_random_uuid(), null, 'Компетенция', 'Компетенция3');
+
+INSERT INTO cqc_element
+VALUES (gen_random_uuid(), '5855c853-9e86-4d18-a604-a908bf8476c2', 'Индикатор', 'Индикатор1'),
+       (gen_random_uuid(), '5855c853-9e86-4d18-a604-a908bf8476c2', 'Индикатор', 'Индикатор2');
+
+INSERT INTO cqc_element
+VALUES (gen_random_uuid(), 'c8db9dc6-a622-402e-b8e7-2ee2013c72f9', 'Знание', 'Знание1'),
+       (gen_random_uuid(), 'c8db9dc6-a622-402e-b8e7-2ee2013c72f9', 'Умение', 'Умение1'),
+       (gen_random_uuid(), 'c8db9dc6-a622-402e-b8e7-2ee2013c72f9', 'Навык', 'Навык1')
+

@@ -7,7 +7,7 @@ import Database.DataModel.Table.CourseOutputLeafsTable.{col, colC}
 import Database.DataModel.Table.CourseTable.{c, cC}
 import Database.DataModel.Table.{CQCElementTable, CourseInputLeafsTable, CourseOutputLeafsTable, CourseTable}
 import Database.Mapper.CQCElementMapper
-import Database.Signature.Entity.{CQCElementEntitySignature, CourseEntitySignature}
+import Database.Signature.Entity.CourseEntitySignature
 import scalikejdbc._
 
 import java.util.UUID
@@ -18,8 +18,19 @@ case class CourseEntity(id: UUID,
                         outputLeaf: Seq[CQCElementEntity]
                        ) extends CourseEntitySignature with EntityModel {
 
+  override def parts(implicit session: DBSession): Map[String, Seq[CQCElementEntity]] = {
+    val cqcElements: Seq[CQCElementTable] =
+      sql"""
+          SELECT * FROM get_course_parts(array[${outputLeaf.map(_.id)}])
+       """.map(elem => CQCElementTable(
+        id = UUID.fromString(elem.string("id")),
+        parentId = UUID.fromString(elem.string("parent_id")),
+        elemType = elem.string("type"),
+        value = elem.string("value")
+      )).collection.apply()
 
-  override def parts(implicit session: DBSession): Map[String, CQCElementEntity] = ???
+    cqcElements.map(CQCElementMapper.tableRow2Entity).groupBy(_.elemType)
+  }
 }
 
 object CourseEntity extends CourseDAO with UUIDFactory {

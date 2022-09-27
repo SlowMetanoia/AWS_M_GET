@@ -79,6 +79,6 @@ package object Service {
      *
      * @return иерархия отношений
      */
-    def relations: Map[String, String]
+    def relations(dbName: String): Map[String, Set[String]]
   }
 }

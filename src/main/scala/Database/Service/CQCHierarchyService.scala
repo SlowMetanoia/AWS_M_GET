@@ -13,8 +13,9 @@ object CQCHierarchyService extends CQCHierarchyDataService {
    *
    * @return иерархия отношений
    */
-  //todo: получение отношений
-  override def relations: Map[String, String] = ???
+  override def relations(dbName: String): Map[String, Set[String]] = {
+    findAll()(dbName).groupMap(_.parentType)(_.childType)
+  }
 
   /**
    * Получение всех Уровней иерархии

@@ -105,14 +105,7 @@ trait CQCDictionaryDAO extends SinglePKDAO[CQCDictionaryEntity, String]
  * DAO для иерархии элементов ККХ
  * table: cqc_elem_hierarchy
  */
-trait CQCHierarchyDAO extends DoublePKDao[CQCHierarchyEntity, String] {
-  /**
-   * Получение текущих отношений между элементами иерархии
-   *
-   * @return иерархия отношений
-   */
-  def relations: Map[String, String] = ???
-}
+trait CQCHierarchyDAO extends DoublePKDao[CQCHierarchyEntity, String]
 
 /**
  * DAO для курсов

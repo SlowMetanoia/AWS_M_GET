@@ -12,5 +12,5 @@ trait CQCRootModelSignature extends CQCHierarchyElementModelSignature {
    *
    * @return последовательноть потомков Элемента ККХ
    */
-  def children: Seq[CQCElementModelSignature] = ???
+  def children(dbName: String): Seq[CQCElementModelSignature]
 }

@@ -13,5 +13,5 @@ trait CQCLeafModelSignature extends CQCHierarchyElementModelSignature {
    *
    * @return родителя
    */
-  def parent: Option[CQCElementModelSignature] = ???
+  def parent(dbName: String): Option[CQCElementModelSignature] = ???
 }

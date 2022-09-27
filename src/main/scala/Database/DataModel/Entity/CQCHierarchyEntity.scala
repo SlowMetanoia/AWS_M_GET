@@ -12,13 +12,6 @@ case class CQCHierarchyEntity(childType: String,
 
 object CQCHierarchyEntity extends CQCHierarchyDAO with UUIDFactory {
   /**
-   * Получение текущих отношений между элементами иерархии
-   *
-   * @return иерархия отношений
-   */
-  override def relations: Map[String, String] = ???
-
-  /**
    * Получение Уровня иерархии из таблицы по id
    *
    * @param id Уровня иерархии который необходимо получить

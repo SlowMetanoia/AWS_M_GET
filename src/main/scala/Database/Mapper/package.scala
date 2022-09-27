@@ -1,11 +1,10 @@
 package Database
 
+import Database.DataModel.Entity.{CQCDictionaryEntity, CQCElementEntity, CQCHierarchyEntity, CourseEntity}
 import Database.DataModel.Model.CQCElement.{CQCElement, CQCElementLeaf, CQCElementRoot}
 import Database.DataModel.Model.{CQCDictionary, CQCHierarchy, Course}
-import Database.DataModel.Entity.{CQCDictionaryEntity, CQCElementEntity, CQCHierarchyEntity, CourseEntity}
 import Database.DataModel.Table.{CQCDictionaryTable, CQCElementTable, CQCHierarchyTable, CourseTable}
 import Database.DataModel.{DomainModel, EntityModel, TableModel}
-import Database.Signature.Entity.CQCElementEntitySignature
 
 package object Mapper {
   sealed trait DirtyDataMapper[EntityType <: EntityModel, TableType <: TableModel, ModelType <: DomainModel]
@@ -23,7 +22,11 @@ package object Mapper {
   trait CQCElementDataMapper extends ClearDataMapper[CQCElementEntity, CQCElementTable, CQCElement] {
     def entity2RootModel(entity: CQCElementEntity): CQCElementRoot
 
+    def rootModel2Entity(root: CQCElementRoot): CQCElementEntity
+
     def entity2LeafModel(entity: CQCElementEntity): CQCElementLeaf
+
+    def leafModel2Entity(leaf: CQCElementLeaf): CQCElementEntity
   }
 
   trait CQCDictionaryDataMapper extends ClearDataMapper[CQCDictionaryEntity, CQCDictionaryTable, CQCDictionary]
@@ -37,7 +40,7 @@ package object Mapper {
 
     def entity2TableRow(entity: CourseEntity): CourseTable
 
-    def entity2Model(entity: CourseEntity, parts: Map[String, CQCElementEntity]): Course
+    def entity2Model(entity: CourseEntity, parts: Map[String, Seq[CQCElementEntity]], relationTable: Map[String, Set[String]]): Course
 
     def model2Entity(model: Course): CourseEntity
   }

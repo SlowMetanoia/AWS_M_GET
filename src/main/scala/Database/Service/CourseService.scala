@@ -1,4 +1,5 @@
 package Database.Service
+
 import Database.DataModel.Entity.CourseEntity
 import Database.DataModel.Model.Course
 import Database.Mapper.CourseMapper
@@ -31,7 +32,10 @@ object CourseService extends CourseDataService {
           SQLOrderByDictionary(orderBy),
           SQLOperatorsDictionary(sort))
 
-      entities.toSet.map(course => CourseMapper.entity2Model(course, course.parts))
+      entities.toSet.map(course => CourseMapper.entity2Model(
+        course,
+        course.parts,
+        CQCHierarchyService.relations(dbName)))
     }
   }
 
@@ -88,7 +92,9 @@ object CourseService extends CourseDataService {
     var res: Option[Course] = Option.empty
 
     NamedDB(dbName) localTx { implicit session =>
-      res = CourseEntity.findById(id).map(course => CourseMapper.entity2Model(course, course.parts))
+      res = CourseEntity.findById(id).map(course => CourseMapper.entity2Model(course,
+        course.parts,
+        CQCHierarchyService.relations(dbName)))
     }
     res
   }
