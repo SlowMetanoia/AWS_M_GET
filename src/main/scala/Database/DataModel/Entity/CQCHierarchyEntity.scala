@@ -117,8 +117,8 @@ object CQCHierarchyEntity extends CQCHierarchyDAO with UUIDFactory {
                                (implicit session: DBSession): Unit =
     withSQL {
       deleteFrom(CQCHierarchyTable)
-        .where.eq(cqcHier.childType, id._1)
+        .where.eq(cqcHierC.childType, id._1)
         .and
-        .eq(cqcHier.parentType, id._2)
+        .eq(cqcHierC.parentType, id._2)
     }.update.apply()
 }

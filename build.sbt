@@ -13,6 +13,6 @@ libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc-interpolation" % scalikejdbcVersion,
   "org.scalikejdbc" %% "scalikejdbc-core" % scalikejdbcVersion,
   "org.scalikejdbc" %% "scalikejdbc-config" % scalikejdbcVersion,
-  "ch.qos.logback"  %  "logback-classic"   % "1.4.0",
+  "ch.qos.logback"  %  "logback-classic"   % "1.4.1",
   "org.postgresql" % "postgresql" % "42.5.0"
 )
