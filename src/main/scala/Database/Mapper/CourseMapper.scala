@@ -26,19 +26,20 @@ object CourseMapper extends CourseDataMapper {
                             relations: Map[String, Set[String]]): Course = {
     val keySet = relations.keySet
     val valueSet = relations.values.flatten.toSet
-    
+
     val Root = (keySet -- valueSet).head
     val leaves = valueSet -- keySet
+
     Course(
       id = entity.id,
       name = entity.name,
-      
+
       inputLeaf = entity.inputLeaf.map(CQCElementMapper.entity2LeafModel),
       outputLeaf = entity.outputLeaf.map(CQCElementMapper.entity2LeafModel),
 
       parts = parts.map {
         case (k, v) if leaves.contains(k) => (k, v.map(CQCElementMapper.entity2LeafModel))
-        case (Root, v)  => (Root, v.map(CQCElementMapper.entity2RootModel))
+        case (Root, v) => (Root, v.map(CQCElementMapper.entity2RootModel))
         case (k, v) => (k, v.map(CQCElementMapper.entity2Model))
       }
     )

@@ -1,4 +1,5 @@
 package Database.Mapper
+
 import Database.DataModel.Model.CQCElement.{CQCElement, CQCElementLeaf, CQCElementRoot}
 import Database.DataModel.Entity.CQCElementEntity
 import Database.DataModel.Table.CQCElementTable
@@ -44,6 +45,14 @@ object CQCElementMapper extends CQCElementDataMapper {
     )
   }
 
+  override def rootModel2Entity(root: CQCElementRoot): CQCElementEntity =
+    CQCElementEntity(
+      id = root.id,
+      parentId = null,
+      elemType = root.elemType,
+      value = root.value
+    )
+
   override def entity2LeafModel(entity: CQCElementEntity): CQCElementLeaf =
     CQCElementLeaf(
       id = entity.id,
@@ -52,13 +61,6 @@ object CQCElementMapper extends CQCElementDataMapper {
       value = entity.value
     )
 
-  override def rootModel2Entity(root: CQCElementRoot): CQCElementEntity =
-    CQCElementEntity(
-      id = root.id,
-      parentId = null,
-      elemType = root.elemType,
-      value = root.value
-    )
 
   override def leafModel2Entity(leaf: CQCElementLeaf): CQCElementEntity =
     CQCElementEntity(

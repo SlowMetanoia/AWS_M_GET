@@ -16,7 +16,15 @@ object CQCHierarchyMapper extends CQCHierarchyDataMapper {
       parentType = entity.parentType
     )
 
-  override def entity2Model(entity: CQCHierarchyEntity): CQCHierarchy = ???
+  override def entity2Model(entity: CQCHierarchyEntity): CQCHierarchy =
+    CQCHierarchy(
+      childType = entity.childType,
+      parentType = entity.parentType
+    )
 
-  override def model2Entity(model: CQCHierarchy): CQCHierarchyEntity = ???
+  override def model2Entity(model: CQCHierarchy): CQCHierarchyEntity =
+    CQCHierarchyEntity(
+      childType = model.childType,
+      parentType = model.parentType
+    )
 }
