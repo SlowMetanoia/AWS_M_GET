@@ -155,3 +155,9 @@ object obj6{
 
 (1 to 10).map(obj6.intPlusOne)
 
+//todo: ещё одни метод задания каррированых функций.
+
+object obj7{
+  val f:(Int=>Int)=>Int = f0=> f0(10)
+}
+obj7.f(_+2)
