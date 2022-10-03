@@ -6,7 +6,7 @@ import Database.DataModel.Table.CourseInputLeafsTable.{cil, cilC}
 import Database.DataModel.Table.CourseOutputLeafsTable.{col, colC}
 import Database.DataModel.Table.CourseTable.{c, cC}
 import Database.DataModel.Table.{CQCElementTable, CourseInputLeafsTable, CourseOutputLeafsTable, CourseTable}
-import Database.Mapper.CQCElementMapper
+import Database.Mapper.{CQCElementMapper, CourseMapper}
 import Database.Signature.Entity.CourseEntitySignature
 import scalikejdbc._
 
@@ -172,7 +172,10 @@ object CourseEntity extends CourseDAO with UUIDFactory {
           .where.eq(c.id, id)
       }.map(CourseTable(c.resultName)).single.apply()
 
-    courseRowOpt.map(CourseMapper.tableRow2Entity)
+    courseRowOpt.map(row => CourseMapper.tableRow2Entity(
+      row,
+      findInputLeafs(row),
+      findOutputLeafs(row)))
   }
 
   /**
@@ -209,7 +212,10 @@ object CourseEntity extends CourseDAO with UUIDFactory {
           .offset(offset)
       }.map(CourseTable(c.resultName)).collection.apply()
 
-    courseRows.map(CourseMapper.tableRow2Entity)
+    courseRows.map(row => CourseMapper.tableRow2Entity(
+      row,
+      findInputLeafs(row),
+      findOutputLeafs(row)))
   }
 
   /**
@@ -266,21 +272,4 @@ object CourseEntity extends CourseDAO with UUIDFactory {
     deleteLeafs(entity)
     insertLeafs(entity)
   }
-}
-
-private object CourseMapper {
-  def tableRow2Entity(row: CourseTable)
-                     (implicit session: DBSession): CourseEntity =
-    CourseEntity(
-      id = row.id,
-      name = row.name,
-      inputLeaf = CourseEntity.findInputLeafs(row),
-      outputLeaf = CourseEntity.findOutputLeafs(row)
-    )
-
-  def entity2TableRow(entity: CourseEntity): CourseTable =
-    CourseTable(
-      id = entity.id,
-      name = entity.name
-    )
 }

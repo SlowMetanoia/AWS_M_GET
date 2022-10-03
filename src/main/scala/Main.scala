@@ -1,10 +1,9 @@
-import Database.DataModel.Entity.CQCDictionaryEntity
 import Database.DataModel.Model.{CQCDictionary, CQCHierarchy}
 import Database.Service.{CQCDictionaryService, CQCHierarchyService}
 import scalikejdbc.config.DBs
 
 object Main extends App {
-  val dbName = "test"
+  val dbName = "default"
   DBs.setupAll()
   val cqcDictElements = Seq(
     CQCDictionary("Компетенция"),
@@ -18,6 +17,5 @@ object Main extends App {
 
   val model = CQCHierarchy(childType = "Индикатор", parentType = "Компетенция")
   CQCHierarchyService.insert(model)(dbName = dbName)
-  CQCHierarchyService.deleteById((model.childType, model.parentType))(dbName = dbName)
   DBs.closeAll()
 }

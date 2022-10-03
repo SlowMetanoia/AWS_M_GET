@@ -1,16 +1,18 @@
 package Database.DataModel.Entity
 
+import Database.DataModel.Entity.Setting.{AutoRollbackNamedDB, BeforeAfterAllDBInit}
 import scalikejdbc.NamedDB
-import scalikejdbc.specs2.mutable.AutoRollback
 
 object CQCHierarchyEntityTest extends BeforeAfterAllDBInit {
-  val cqcDictElements = Seq(
+  val cqcDictElements: Seq[CQCDictionaryEntity] = Seq(
     CQCDictionaryEntity("Компетенция"),
     CQCDictionaryEntity("Индикатор"),
     CQCDictionaryEntity("Знание"),
     CQCDictionaryEntity("Умение"),
     CQCDictionaryEntity("Навык")
   )
+
+  val entity: CQCHierarchyEntity = CQCHierarchyEntity("Индикатор", "Компетенция")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -27,15 +29,15 @@ object CQCHierarchyEntityTest extends BeforeAfterAllDBInit {
 
   }
 
-  val entity: CQCHierarchyEntity = CQCHierarchyEntity("Индикатор", "Компетенция")
-
   sequential
 
-  "Hierarchy successfully created" in new AutoRollback {
+  "Hierarchy successfully created" in new AutoRollbackNamedDB {
     CQCHierarchyEntity.insert(entity)
 
     val res: Option[CQCHierarchyEntity] = CQCHierarchyEntity.findByDoubleId((entity.childType, entity.parentType))
     res.isDefined must beTrue
     res.get mustEqual entity
   }
+
+
 }

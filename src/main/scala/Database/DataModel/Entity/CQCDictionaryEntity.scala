@@ -4,6 +4,7 @@ import Database.DataModel.EntityModel
 import Database.DataModel.Table.CQCDictionaryTable
 import Database.DataModel.Table.CQCDictionaryTable.{cqcDict, cqcDictC}
 import Database.Mapper.CQCDictionaryMapper
+import Database.Name
 import Database.Signature.Entity.CQCDictionaryEntitySignature
 import scalikejdbc._
 
@@ -21,7 +22,7 @@ object CQCDictionaryEntity extends CQCDictionaryDAO with UUIDFactory {
    */
   override def findAll(limit: Int,
                        offset: Int,
-                       orderBy: SQLSyntax,
+                       orderBy: SQLSyntax = Name.value,
                        sort: SQLSyntax)
                       (implicit session: DBSession): Seq[CQCDictionaryEntity] = {
     val rows: Seq[CQCDictionaryTable] =
